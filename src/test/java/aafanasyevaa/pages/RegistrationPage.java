@@ -2,6 +2,8 @@ package aafanasyevaa.pages;
 
 import com.codeborne.selenide.SelenideElement;
 
+import java.io.File;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
@@ -9,30 +11,25 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class RegistrationPage {
 
-    //locators
     private final String FORM_TITLE = "Student Registration Form";
     private SelenideElement
             formTitle = $(".practice-form-wrapper"),
             firstNameInput = $("#firstName"),
             lastNameInput = $("#lastName"),
             emailInput = $("#userEmail"),
-            genderRadio = $(byText("Female")),
+            genderRadio = $("#genterWrapper"),
             numberInput = $("#userNumber"),
-//           calendarSelect = $("#dateOfBirthInput"),
             subjectsInput = $("#subjectsInput"),
-            subjectSelect = $(byText("Chemistry")),
-            hobbySelect = $(byText("Sports")),
+            hobbySelect =  $("#hobbiesWrapper"),
+            uploadPictureButton = $("#uploadPicture"),
             addressInput = $("#currentAddress"),
             listOfStates = $("#state"),
-            stateSelect = $(byText("NCR")),
             listOfCities = $("#city"),
-            citySelect = $(byText("Delhi")),
-            formSubmitButton = $("#submit");
+            formSubmitButton = $("#submit"),
+            resultsTable =  $(".table-responsive");
 
-    public CalendarComponent calendar = new CalendarComponent();
+    public Calendar calendar = new Calendar();
 
-
-    //actions
     public RegistrationPage openPage() {
         open("https://demoqa.com/automation-practice-form");
         formTitle.shouldHave(text(FORM_TITLE));
@@ -54,8 +51,8 @@ public class RegistrationPage {
         return this;
     }
 
-    public RegistrationPage chooseGender() {
-        genderRadio.click();
+    public RegistrationPage chooseGender(String value) {
+        genderRadio.find(byText(value)).click();
         return this;
     }
 
@@ -64,23 +61,17 @@ public class RegistrationPage {
         return this;
     }
 
-//    public RegistrationPage openCalendar() {
-//        calendarSelect.click();
-//        return this;
-//    }
-
     public RegistrationPage chooseSubject(String letter) {
-        subjectsInput.setValue(letter);
+        subjectsInput.setValue(letter).pressEnter();
         return this;
     }
 
-    public RegistrationPage selectSubject() {
-        subjectSelect.click();
+    public RegistrationPage chooseHobby(String value) {
+        hobbySelect.find(byText(value)).click();
         return this;
     }
-
-    public RegistrationPage chooseHobby() {
-        hobbySelect.click();
+    public RegistrationPage uploadPicture() {
+        uploadPictureButton.uploadFile(new File("src/test/resources/pic.png"));
         return this;
     }
 
@@ -89,28 +80,24 @@ public class RegistrationPage {
         return this;
     }
 
-    public RegistrationPage openListOfStates() {
+    public RegistrationPage openListOfStates(String value) {
         listOfStates.click();
+        listOfStates.find(byText(value)).click();
         return this;
     }
 
-    public RegistrationPage selectState() {
-        stateSelect.click();
-        return this;
-    }
-
-    public RegistrationPage openListOfCities() {
+    public RegistrationPage openListOfCities(String value) {
         listOfCities.click();
-        return this;
-    }
-
-    public RegistrationPage selectCity() {
-        citySelect.click();
+        listOfCities.find(byText(value)).click();
         return this;
     }
 
     public RegistrationPage submitTheForm() {
         formSubmitButton.click();
+        return this;
+    }
+    public RegistrationPage checkResultsValue(String key, String value) {
+        resultsTable.$(byText(key)).parent().shouldHave(text(value));
         return this;
     }
 }
